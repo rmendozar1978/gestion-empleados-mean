@@ -1,0 +1,436 @@
+{
+  "info": {
+    "name": "GA8-EV02 Gestion Empleados",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api/empleados"
+    },
+    {
+      "key": "empleado_id",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "TC-01 POST válido (201)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Código 201', () => pm.response.to.have.status(201));",
+              "const j = pm.response.json();",
+              "pm.test('Incluye _id', () => pm.expect(j).to.have.property('_id'));",
+              "pm.collectionVariables.set('empleado_id', j._id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Laura Gómez\",\n  \"cargo\": \"Desarrolladora Backend\",\n  \"departamento\": \"Tecnología\",\n  \"salario\": 4500000\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}"
+        }
+      }
+    },
+    {
+      "name": "TC-02 POST sin nombre (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Código 400', () => pm.response.to.have.status(400));",
+              "const j = pm.response.json();",
+              "pm.test('Estructura de error', () => { pm.expect(j.status).to.eql('error'); pm.expect(j).to.have.property('mensaje'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cargo\": \"Analista\",\n  \"departamento\": \"Finanzas\",\n  \"salario\": 3000000\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}"
+        }
+      }
+    },
+    {
+      "name": "TC-03 POST salario negativo (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Código 400', () => pm.response.to.have.status(400));",
+              "const j = pm.response.json();",
+              "pm.test('Estructura de error', () => { pm.expect(j.status).to.eql('error'); pm.expect(j).to.have.property('mensaje'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Laura Gómez\",\n  \"cargo\": \"Desarrolladora Backend\",\n  \"departamento\": \"Tecnología\",\n  \"salario\": -100\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}"
+        }
+      }
+    },
+    {
+      "name": "TC-04 POST JSON mal formado (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Código 400', () => pm.response.to.have.status(400));",
+              "const j = pm.response.json();",
+              "pm.test('Estructura de error', () => { pm.expect(j.status).to.eql('error'); pm.expect(j).to.have.property('mensaje'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"nombre\": \"Ana\", \"cargo\": \"Analista\"",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}"
+        }
+      }
+    },
+    {
+      "name": "TC-05 GET lista (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Código 200', () => pm.response.to.have.status(200));",
+              "pm.test('Responde en menos de 800 ms', () => pm.expect(pm.response.responseTime).to.be.below(800));",
+              "pm.test('Es un arreglo', () => pm.expect(pm.response.json()).to.be.an('array'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}"
+        }
+      }
+    },
+    {
+      "name": "TC-06 GET por id (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Código 200', () => pm.response.to.have.status(200));",
+              "pm.test('Responde en menos de 800 ms', () => pm.expect(pm.response.responseTime).to.be.below(800));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/{{empleado_id}}"
+        }
+      }
+    },
+    {
+      "name": "TC-07 GET id inexistente (404)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Código 404', () => pm.response.to.have.status(404));",
+              "const j = pm.response.json();",
+              "pm.test('Estructura de error', () => { pm.expect(j.status).to.eql('error'); pm.expect(j).to.have.property('mensaje'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/64b7f0c2e1b2a3c4d5e6f789"
+        }
+      }
+    },
+    {
+      "name": "TC-08 GET id inválido (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Código 400', () => pm.response.to.have.status(400));",
+              "const j = pm.response.json();",
+              "pm.test('Estructura de error', () => { pm.expect(j.status).to.eql('error'); pm.expect(j).to.have.property('mensaje'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/abc123"
+        }
+      }
+    },
+    {
+      "name": "TC-09 PUT válido (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Código 200', () => pm.response.to.have.status(200));",
+              "pm.test('Responde en menos de 800 ms', () => pm.expect(pm.response.responseTime).to.be.below(800));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Laura Gómez R.\",\n  \"cargo\": \"Líder Backend\",\n  \"departamento\": \"Tecnología\",\n  \"salario\": 6000000\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/{{empleado_id}}"
+        }
+      }
+    },
+    {
+      "name": "TC-10 PUT salario negativo (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Código 400', () => pm.response.to.have.status(400));",
+              "const j = pm.response.json();",
+              "pm.test('Estructura de error', () => { pm.expect(j.status).to.eql('error'); pm.expect(j).to.have.property('mensaje'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Laura Gómez\",\n  \"cargo\": \"Desarrolladora Backend\",\n  \"departamento\": \"Tecnología\",\n  \"salario\": -5\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/{{empleado_id}}"
+        }
+      }
+    },
+    {
+      "name": "TC-11 PUT id inexistente (404)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Código 404', () => pm.response.to.have.status(404));",
+              "const j = pm.response.json();",
+              "pm.test('Estructura de error', () => { pm.expect(j.status).to.eql('error'); pm.expect(j).to.have.property('mensaje'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Laura Gómez\",\n  \"cargo\": \"Desarrolladora Backend\",\n  \"departamento\": \"Tecnología\",\n  \"salario\": 4500000\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/64b7f0c2e1b2a3c4d5e6f789"
+        }
+      }
+    },
+    {
+      "name": "TC-12 DELETE (200)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Código 200', () => pm.response.to.have.status(200));",
+              "pm.test('Responde en menos de 800 ms', () => pm.expect(pm.response.responseTime).to.be.below(800));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/{{empleado_id}}"
+        }
+      }
+    },
+    {
+      "name": "TC-13 DELETE repetido (404)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Código 404', () => pm.response.to.have.status(404));",
+              "const j = pm.response.json();",
+              "pm.test('Estructura de error', () => { pm.expect(j.status).to.eql('error'); pm.expect(j).to.have.property('mensaje'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/{{empleado_id}}"
+        }
+      }
+    },
+    {
+      "name": "TC-14 GET tras eliminar (404)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Código 404', () => pm.response.to.have.status(404));",
+              "const j = pm.response.json();",
+              "pm.test('Estructura de error', () => { pm.expect(j.status).to.eql('error'); pm.expect(j).to.have.property('mensaje'); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/{{empleado_id}}"
+        }
+      }
+    }
+  ]
+}
