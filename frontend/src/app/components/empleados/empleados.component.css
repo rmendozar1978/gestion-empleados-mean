@@ -1,0 +1,16 @@
+/* Estilos que solo aplican a este componente (Angular los aísla). */
+.card-title {
+  font-weight: 500;
+}
+
+/* Mensajes de validación en rojo bajo cada campo */
+.msg-error {
+  color: #e53935;
+}
+
+td {
+  vertical-align: middle;
+}
+.acciones button {
+  margin-right: 8px;
+}
